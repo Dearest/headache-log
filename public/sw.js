@@ -1,6 +1,6 @@
 // 页面壳：网络优先（总能拿到新版本，断网回退缓存）；带哈希的构建产物和模型：缓存优先；API 不缓存。
-const CACHE = 'headache-v1';
-const SHELL = ['/', '/manifest.webmanifest', '/icon.svg', '/models/head.bin'];
+const CACHE = 'headache-v2';
+const SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/models/head.bin'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
