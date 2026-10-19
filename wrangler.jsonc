@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "headache-log",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "headache-log", "database_id": "19f3797a-7a7a-447e-84b8-574fc94e0efd" }
+  ],
+  "routes": [{ "pattern": "headache.korx.cc", "custom_domain": true }],
+  "observability": { "enabled": true }
+}
