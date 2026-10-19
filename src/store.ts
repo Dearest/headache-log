@@ -6,6 +6,25 @@ const K_ENTRIES = 'hl:entries';
 const K_OUTBOX = 'hl:outbox';
 const K_CURSOR = 'hl:cursor';
 const K_PIN = 'hl:pin';
+const K_DEVICE = 'hl:device';
+
+export const deviceId = (() => {
+  let id = localStorage.getItem(K_DEVICE);
+  if (!id) {
+    id = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+    localStorage.setItem(K_DEVICE, id);
+  }
+  return id;
+})();
+
+export function apiHeaders(pin = state.pin ?? ''): Record<string, string> {
+  return {
+    'x-pin': pin,
+    'x-device': deviceId,
+    'x-standalone': matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone ? '1' : '0',
+    'content-type': 'application/json',
+  };
+}
 
 export type SyncStatus = 'idle' | 'syncing' | 'offline' | 'error' | 'bad_pin';
 
@@ -88,7 +107,7 @@ export function importEntries(list: Entry[]) {
 }
 
 export async function verifyPin(pin: string) {
-  const r = await fetch('/api/ping', { headers: { 'x-pin': pin } });
+  const r = await fetch('/api/ping', { headers: apiHeaders(pin) });
   if (r.status === 401) return false;
   if (!r.ok) throw new Error(`服务器错误 ${r.status}`);
   localStorage.setItem(K_PIN, pin);
@@ -117,8 +136,7 @@ export function sync(): Promise<void> {
 }
 
 async function doSync() {
-  const pin = state.pin!;
-  const headers = { 'x-pin': pin, 'content-type': 'application/json' };
+  const headers = apiHeaders();
   set({ status: 'syncing' });
   try {
     if (state.outbox.length) {

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Devices } from '../components/Devices';
 import { Header } from '../components/ui';
 import { today } from '../date';
 import { back } from '../router';
@@ -55,6 +56,11 @@ export function Settings() {
         </div>
         <input ref={file} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && importJson(e.target.files[0])} />
         {msg && <p className="muted small">{msg}</p>}
+      </section>
+      <section className="card">
+        <h3>登录过的设备</h3>
+        <p className="muted small">每台设备第一次输入 PIN 后开始记录。隔 30 分钟以上再打开算新的一次；时长按页面开着的时间估算。</p>
+        <Devices />
       </section>
       <section className="card">
         <h3>这台设备</h3>
